@@ -10,4 +10,4 @@ COPY styles.css /usr/share/nginx/html/styles.css
 EXPOSE 80
 
 # Default command to run Nginx
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["nginx", "-g", "daemon off;]
