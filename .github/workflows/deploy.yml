@@ -16,7 +16,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Step 2: Configure AWS credentials
+      # Step 2: Login to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      # Step 3: Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -24,12 +31,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: 'ap-south-1'
 
-      # Step 3: Login to Amazon ECR
+      # Step 4: Login to Amazon ECR
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      # Step 4: Build, tag, and push Docker image to Amazon ECR
+      # Step 5: Build, tag, and push Docker image to Amazon ECR
       - name: Build, tag, and push Docker image
         id: build-image
         env:
@@ -41,7 +48,7 @@ jobs:
           docker push $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
 
-      # Step 5: Fill in the new image ID in the ECS task definition
+      # Step 6: Fill in the new image ID in the ECS task definition
       - name: Update ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
@@ -50,7 +57,7 @@ jobs:
           container-name: aziz
           image: ${{ env.image }}
 
-      # Step 6: Deploy the updated ECS task definition
+      # Step 7: Deploy the updated ECS task definition
       - name: Deploy ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
