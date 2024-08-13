@@ -3,7 +3,7 @@ name: CI/CD deploy
 on:
   push:
     branches:
-      - deploy-to-ecs-fargate
+      - main
 
 jobs:
   deploy:
