@@ -35,5 +35,4 @@ jobs:
           task-definition: ecs-task-definition.json
           service: my-ecs-service
           cluster: my-ecs-cluster
-          container-name: aziz
           wait-for-service-stability: true
