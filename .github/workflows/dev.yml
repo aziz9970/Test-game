@@ -34,5 +34,5 @@ jobs:
         with:
           task-definition: config/ecs-task-definition.json
           service: my-ecs-service
-          cluster: my-ecs-cluster
+          cluster: Expresstest  # Use the correct cluster name
           wait-for-service-stability: true
