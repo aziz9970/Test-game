@@ -33,6 +33,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: config/ecs-task-definition.json
-          service: my-ecs-service
-          cluster: Expresstest  # Use the correct cluster name
+          service: my-ecs-service  # Ensure this matches the name of the service you created
+          cluster: Expresstest
           wait-for-service-stability: true
