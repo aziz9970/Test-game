@@ -18,7 +18,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t aziz529/snack-game/Test-game .
+        run: docker build -t aziz529/snack-game/test-game .
 
       - name: Publish image to Docker Hub
         run: docker push aziz529/snack-game/Test-game:latest
