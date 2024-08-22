@@ -1,38 +1,29 @@
-name: Deploy to ECS
+name: CICD
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: [ubuntu-latest]
     steps:
-      - name: Checkout code
+      - name: Checkout source
         uses: actions/checkout@v3
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Build, tag, and push the Docker image to Amazon ECR
-        run: |
-          docker build -t aziz529/snack-game .
-          docker tag aziz529/snack-game:latest 025066249719.dkr.ecr.ap-south-1.amazonaws.com/aziz529/snack-game:latest
-          docker push 025066249719.dkr.ecr.ap-south-1.amazonaws.com/aziz529/snack-game:latest
-
-      - name: Deploy to ECS
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: config/ecs-task-definition.json
-          service: my-ecs-service  # Ensure this matches the name of the service you created
-          cluster: Expresstest
-          wait-for-service-stability: true
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} 
+      - name: Build docker image
+        run: docker build -t aziz529/snack-game/Test-game .
+      - name: Publish image to docker hub
+        run: docker push aziz529/snack-game/Test-game:latest
+        
+  deploy:
+    needs: build
+    runs-on: [ip-172-31-32-202]
+    steps:
+      - name: Pull image from docker hub
+        run: docker pull aziz529/snack-game/Test-game:latest
+      - name: Delete old container
+        run: docker rm -f Test-game-container
+      - name: Run docker container
+        run: docker run -d -p 5000:5000 --name nodejs-app-container aziz529/snack-game/Test-game
