@@ -18,7 +18,20 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t aziz529/test-repo:latest .
+        run: docker build -t aziz529/snack-game/test-game:latest .
 
       - name: Publish image to Docker Hub
-        run: docker push aziz529/test-repo:latest
+        run: docker push aziz529/snack-game/test-game:latest
+
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull image from Docker Hub
+        run: docker pull aziz529/snack-game/test-game:latest
+
+      - name: Delete old container
+        run: docker rm -f Test-game-container || true
+
+      - name: Run Docker container
+        run: docker run -d --name Test-game-container aziz529/snack-game/test-game:latest
