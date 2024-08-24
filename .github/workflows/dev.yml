@@ -25,7 +25,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: self-hosted
+    runs-on: ip-172-31-32-202
     steps:
       - name: Pull image from Docker Hub
         run: docker pull aziz529/snack-game/test-game:latest
