@@ -1,4 +1,7 @@
 FROM nginx:latest
 
-# Copy your static website files into the Nginx container
+# Copy static files to the Nginx directory
 COPY ./html /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
