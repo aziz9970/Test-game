@@ -4,4 +4,4 @@ FROM nginx:latest
 COPY ./html /usr/share/nginx/html
 
 # Expose port 8081
-EXPOSE 8081
+EXPOSE 80
