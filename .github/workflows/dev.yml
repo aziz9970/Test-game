@@ -16,14 +16,18 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1  # Updated to your region
+          aws-region: ap-south-1  # Your AWS region
+
+      - name: Get ECR login password
+        id: ecr-login
+        run: echo "::set-output name=password::$(aws ecr get-login-password --region ap-south-1)"
 
       - name: Login to Amazon ECR
         uses: docker/login-action@v2
         with:
           username: AWS
-          password: ${{ secrets.AWS_ECR_PASSWORD }}
-          registry: your-account-id.dkr.ecr.ap-south-1.amazonaws.com  # Updated to your region
+          password: ${{ steps.ecr-login.outputs.password }}
+          registry: your-account-id.dkr.ecr.ap-south-1.amazonaws.com  # Update with your ECR registry URL
 
       - name: Build Docker image
         run: docker build -t your-account-id.dkr.ecr.ap-south-1.amazonaws.com/testgame:latest .
@@ -40,7 +44,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1  # Updated to your region
+          aws-region: ap-south-1  # Your AWS region
 
       - name: Update ECS Service
         run: |
