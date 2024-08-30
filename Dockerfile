@@ -1,7 +1,8 @@
+# Use the official Nginx image from the Docker Hub
 FROM nginx:latest
 
 # Copy static files to the Nginx directory
 COPY ./html /usr/share/nginx/html
 
-# Expose port 8081
+# Expose port 80 (default HTTP port for Nginx)
 EXPOSE 80
