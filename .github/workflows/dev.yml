@@ -20,20 +20,20 @@ jobs:
 
       - name: Get ECR login password
         id: ecr-login
-        run: echo "::set-output name=password::$(aws ecr get-login-password --region ap-south-1)"
+        run: echo "ECR_PASSWORD=$(aws ecr get-login-password --region ap-south-1)" >> $GITHUB_ENV
 
       - name: Login to Amazon ECR
         uses: docker/login-action@v2
         with:
           username: AWS
-          password: ${{ steps.ecr-login.outputs.password }}
-          registry: your-account-id.dkr.ecr.ap-south-1.amazonaws.com
+          password: ${{ env.ECR_PASSWORD }}
+          registry: 025066249719.dkr.ecr.ap-south-1.amazonaws.com
 
       - name: Build Docker image
-        run: docker build -t your-account-id.dkr.ecr.ap-south-1.amazonaws.com/testgame:latest .
+        run: docker build -t 025066249719.dkr.ecr.ap-south-1.amazonaws.com/aziz529/snack-game:latest .
 
       - name: Push image to Amazon ECR
-        run: docker push your-account-id.dkr.ecr.ap-south-1.amazonaws.com/testgame:latest
+        run: docker push 025066249719.dkr.ecr.ap-south-1.amazonaws.com/aziz529/snack-game:latest
 
   deploy:
     needs: build
@@ -48,4 +48,4 @@ jobs:
 
       - name: Update ECS Service
         run: |
-          aws ecs update-service --cluster your-cluster-name --service your-service-name --force-new-deployment
+          aws ecs update-service --cluster ExpresstestNew --service service --force-new-deployment
